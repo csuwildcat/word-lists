@@ -1,0 +1,20 @@
+{
+  "name": "web-boilerplate",
+  "version": "0.0.1",
+  "description": "Simple Node/HTML project template",
+  "keywords": [
+    "boilerplate"
+  ],
+  "license": "Apache 2",
+  "author": "Daniel Buchner",
+  "scripts": {
+    "edit": "node -e \"require('spec-up')()\"",
+    "render": "node -e \"require('spec-up')({ nowatch: true })\""
+  },
+  "dependencies": {
+    "spec-up": "0.9.101",
+    "koa": "2.13.0",
+    "koa-router": "9.4.0",
+    "koa-logger": "3.2.1"
+  }
+}
