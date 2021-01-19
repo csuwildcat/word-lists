@@ -23,102 +23,143 @@ var ruleSet = new natural.RuleSet(language);
 var partsOfSpeech = new natural.BrillPOSTagger(lexicon, ruleSet);
 
 
-let compileLocation = 'data/json';
-const defaultBlockedPoS = 'VBD,VBG,VBN,VBZ,NNS';
+let compileLocation = 'data/output';
+let blockedWords = require('./data/blocked.json');
 const wordFiles = [
-  'data/raw/bip-39.txt',
-  'data/raw/plants.txt',
-  'data/raw/animals.txt',
-  'data/raw/google-books-modified.txt',
-  // 'data/raw/eff-long-list.txt',
-  // 'data/raw/bip-39.txt',
-  // 'data/raw/gutenberg-15k.txt',
-  // 'data/raw/verbs.txt',
-  // 'data/raw/plants.txt',
-  // 'data/raw/animals.txt',
-  //'data/raw/10k.txt',
-  //'data/raw/100k.txt'
+  'data/modified/subtlex.txt', // manually vet
+  'data/modified/bip-39.txt', // add to compile group
+  'data/modified/eff.txt', // add to compile group
+  'data/modified/plants.txt', // filter by length, add after for dupe only
+  'data/modified/animals.txt', // filter by length, add after for dupe only
+  // 'data/modified/verbs.txt',
+  //'data/modified/google-books.txt',
 ];
 
-function constructRegexp(options = {}){
-  return new RegExp(`\\b([a-zA-Z]{${options.min || 3},${options.max || 8}})(?::|,|\\r|\\n|\\s+)`, 'gmi');
+const minLength = argv.min || 3;
+const maxLength = argv.max || 8;
+
+const sortMap = {
+  'true': (a, b) => a.token.length - b.token.length || a.token.localeCompare(b.token),
+  'asc': (a, b) => a.token.length - b.token.length,
+  'desc': (a, b) => b.token.length - a.token.length,
+  'lex': (a, b) => a.token.localeCompare(b.token)
 }
 
-async function parseFiles(args, files){
+const posFilterMap = {
+  plural: 'NNS,VBZ',
+  past: 'VBD',
+  present: 'VBG',
+  default: 'CC,DT,EX,IN,FW,MD,RB,VBN,VBP,JJR,JJS,PRP,UH,WP,WDT,WRB,PRP$,WP$'
+};
+
+posFilterMap.strict = Object.values(posFilterMap).join(',');
+posFilterMap.pos = argv.pos;
+
+var posFilter = [];
+for (let z in posFilterMap) {
+  if (argv[z]) posFilter.push(posFilterMap[z])
+}
+posFilter = posFilter.join(',').split(/\s*,\s*/g).reduce((obj, pos) => { obj[pos] = true; return obj }, {});
+
+const stripRepeated = /((\w+)(\w))\3$|/i;
+const suffixMap = {
+  actor: ['er'],
+  past: ['ed'],
+  present: ['ing'],
+  like: ['ity','ish','y'],
+  without: ['less'],
+  abstract: ['ism','tism','tist']
+}
+const getPosWords = words => partsOfSpeech.tag(words).taggedWords;
+const getTokenRegex = () => new RegExp(`\\b([a-zA-Z]{${minLength},${maxLength}})(?::|,|\\r|\\n|\\s+)`, 'gmi');
+
+async function parseFiles(files, union){
   let words = {};
-  let regex = constructRegexp(args);
+  let regex = getTokenRegex();
+  let paths = Array.isArray(files) ? files : [files];
+  let occurrences = {};
   await Promise.all(
-    (Array.isArray(files) ? files : [files]).map(path => fs.readFile(path, 'utf8'))
+    paths.map(path => fs.readFile(path, 'utf8'))
   ).then(texts => {
-    texts.forEach(text => text.replace(regex, (m, g1) => words[g1.toLowerCase()] = true))
+    texts.forEach((text, i) => {
+      let dupeMap = {};
+      text.replace(regex, (m, g1) => {
+        let word = g1.toLowerCase();
+        words[word] = true;
+        if (!dupeMap[word]) {
+          dupeMap[word] = true;
+          occurrences[word] = occurrences[word] || 0;
+          occurrences[word]++;
+        }
+      });
+    });
   })
-  return words;
-}
-
-function filterSimilar(wordMap, sort) {
-  let words = Object.keys(wordMap);
-  if (sort) words.sort((a, b) => a.length - b.length || a.localeCompare(b))
-  return words.filter(word => {
-    if (word.length < 5) return true;
-    if (word[0] === word[1]) return false;
-    let pluralRoot = word.slice(0,-1);
-    let tensedRoot = word.slice(0,-2);
-    let similar = word.slice(0,6);
-    return !(wordMap[pluralRoot] || wordMap[tensedRoot] || word.length > 6 && wordMap[similar])
-  });
+  if (union) {
+    let overlap = {};
+    for (let word in occurrences) {
+      overlap[occurrences[word]] = overlap[occurrences[word]] || 0;
+      overlap[occurrences[word]]++;
+    }
+    return overlap;
+  }
+  else return words;
 }
 
 function compileWords(){
-  let posRegex = argv.posfilter ? 
-                  new RegExp((argv.posfilter === true ? defaultBlockedPoS : argv.posfilter).replace(/\s*,\s*/gi, '|') + '\\b', 'i')
-                  : false;
   return new Promise(async resolve => {
     await fs.ensureDir(compileLocation);
-    let files = argv.files ? JSON.parse(argv.files) : wordFiles;
-    let words = await parseFiles(argv, files);
-    words = argv.samefilter ? filterSimilar(words, argv.sort) : Object.keys(words);
-    words = partsOfSpeech.tag(words).taggedWords;
-    if (argv.sort) words.sort((a, b) => a.token.localeCompare(b.token))
-    words = words.reduce((entries, word) => {
-      if (!posRegex || !word.tag.match(posRegex)) {
-        entries[word.token] = word.tag;
+    let files = argv.files ? argv.files.split(/\s*,\s*/g) : wordFiles;
+    let wordMap = await parseFiles(files);
+    let words = getPosWords(Object.keys(wordMap));
+    let filterSimilar = argv.similar === true ? maxLength - 3 : argv.similar;
+    if (argv.sort) words.sort(sortMap[argv.sort]);
+    let suffixes;
+    if (argv.strict) {
+      suffixes = Object.values(suffixMap).flat().sort((a, b) => b.length - a.length);
+    }
+    else {
+      suffixes = [];
+      for (let z in suffixMap) {
+        if (argv[z]) endings.push(suffixMap[z])
       }
+      suffixes = suffixes.flat().sort((a, b) => b.length - a.length);
+    }
+    words = words.reduce((entries, entry) => {
+      let word = entry.token;
+      if (blockedWords[word]) return entries;
+      if (posFilter[entry.tag]) return entries;
+      if (filterSimilar && word.length > filterSimilar){ 
+        if (wordMap[word.slice(0, filterSimilar)]) return entries;
+      }
+      if (suffixes.some(suffix => {
+        let length = -suffix.length;
+        let slice = word.slice(length);
+        if (slice === suffix) {
+          let root = word.slice(0, length);
+          root = stripRepeated.exec(root)[1] || root;
+          return wordMap[root] || wordMap[root + 'e'];
+        }
+      })) return entries;
+      entries[word] = entry.tag;
       return entries;
     }, {});
-    await fs.writeFile(compileLocation + '/words.json', JSON.stringify(words, null, 2));
+    let filename = (compileLocation + '/' + (argv.filename || files.map(path => {
+      return path.split('/').pop().split('.')[0];
+    }).join('-'))) + (argv.list ? '.txt' : '.json');
+    await fs.writeFile(filename, argv.list ? Object.keys(words).join('\n') : JSON.stringify(words, null, 2));
     resolve();
   });
 }
 
-function reduceRaw(){
+function getUnions() {
   return new Promise(async resolve => {
-    let words = await parseFiles(argv, argv.file);
-    let filtered = filterSimilar(words);
-    await fs.writeFile(argv.force ? argv.file : compileLocation +  '/' + argv.file.split('/').pop(), filtered.join('\n'));
+    await fs.ensureDir(compileLocation);
+    let files = argv.files ? argv.files.split(/\s*,\s*/g) : wordFiles;
+    let overlap = await parseFiles(files, true);
+    console.log(overlap);
     resolve();
   });
 }
 
-function posFilter(){
-  return new Promise(async resolve => {
-    let pos = argv.pos.split(',').reduce((pos, s) => {
-      pos[s.trim()] = 1;
-      return pos;
-    }, {})
-    let words = await parseFiles(argv, argv.file);
-    let filtered = partsOfSpeech.tag(Object.keys(words)).taggedWords           
-      .sort((a, b) => a.token.localeCompare(b.token))
-      .reduce((words, word) => {
-        if (pos[word.tag]) {
-          words[word.token] = word.tag;
-        }
-        return words;
-      }, {});
-    await fs.writeFile(compileLocation +  '/' + argv.file.split('/').pop().split('.')[0] + '-' + Object.keys(pos).join('-') + '.json', JSON.stringify(filtered, null, 2));
-    resolve();
-  });
-}
-
+gulp.task('overlap', getUnions);
 gulp.task('compile', compileWords);
-gulp.task('reduce', reduceRaw);
-gulp.task('pos', posFilter);
