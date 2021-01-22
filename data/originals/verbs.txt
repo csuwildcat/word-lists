@@ -3038,8 +3038,6 @@ poach
 cotton
 country
 relabel
-ccept
-birthe
 bedevil
 enslave
 fug
@@ -3052,7 +3050,6 @@ stencil
 thresh
 caper
 descry
-dumple
 goose
 junk
 leaf
@@ -3068,7 +3065,6 @@ encrust
 cousin
 presage
 ruffle
-unavail
 adore
 french
 glaze
@@ -3289,9 +3285,7 @@ scythe
 trill
 enemy
 energy
-skirkle
 dam
-orcool
 engine
 reroute
 english
@@ -3300,17 +3294,14 @@ salve
 epoch
 era
 epoxy
-dewater
 wit
 ennoble
 error
 posture
-uncease
 grown
 evening
 event
 neck
-assun
 example
 ate
 foment

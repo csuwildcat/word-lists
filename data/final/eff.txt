@@ -32,7 +32,6 @@ agenda
 agent
 aghast
 agile
-agility
 agonize
 agony
 aide
@@ -191,7 +190,6 @@ baton
 battery
 battle
 bauble
-bladder
 blade
 blame
 blank
@@ -237,7 +235,6 @@ botany
 bottle
 bottom
 bounce
-bouncy
 bovine
 boxcar
 boxer
@@ -246,7 +243,6 @@ breach
 breath
 breeder
 breeze
-breezy
 brewery
 bribe
 brick
@@ -314,7 +310,6 @@ candle
 candy
 cane
 canine
-canned
 cannon
 canon
 canopy
@@ -388,7 +383,6 @@ chatty
 cheek
 cheer
 cheese
-cheesy
 chef
 chemist
 chess
@@ -521,8 +515,6 @@ convent
 cope
 copier
 copious
-copper
-copy
 coral
 cork
 cornea
@@ -593,11 +585,9 @@ cupid
 curator
 cure
 curfew
-curry
 curse
 curtain
 curve
-curvy
 cusp
 custody
 cut
@@ -659,7 +649,6 @@ demise
 denial
 denote
 dense
-density
 dental
 dentist
 deny
@@ -789,7 +778,6 @@ eclipse
 ecology
 economy
 edge
-edgy
 edition
 editor
 eel
@@ -1076,7 +1064,6 @@ good
 gooey
 goofy
 gore
-gory
 gossip
 gothic
 gout
@@ -1106,7 +1093,6 @@ grief
 grill
 grimace
 grime
-grimy
 grip
 grit
 groggy
@@ -1158,7 +1144,6 @@ harvest
 hash
 hassle
 haste
-hasty
 hatbox
 hatchet
 haunt
@@ -1201,7 +1186,6 @@ hut
 hybrid
 ice
 icon
-icy
 idiocy
 idiom
 igloo
@@ -1256,7 +1240,6 @@ joyride
 judge
 juggle
 juice
-juicy
 jumble
 jumbo
 jump
@@ -1280,8 +1263,6 @@ kinetic
 kinship
 kitchen
 kite
-kitten
-kitty
 kiwi
 knee
 knoll
@@ -1306,7 +1287,6 @@ last
 latch
 late
 lather
-latter
 launch
 launder
 laundry
@@ -1426,7 +1406,6 @@ motive
 motor
 motto
 mouse
-mousy
 mouth
 movable
 move
@@ -1672,7 +1651,6 @@ poison
 poker
 polar
 police
-policy
 polio
 polish
 polka
@@ -1684,7 +1662,6 @@ pony
 popcorn
 pope
 poplar
-poppy
 popular
 pork
 porous
@@ -1795,7 +1772,6 @@ quit
 quote
 rabid
 race
-racism
 rack
 radar
 radial
@@ -1803,7 +1779,6 @@ radio
 radish
 raft
 rage
-ragged
 raider
 railcar
 railway
@@ -1817,7 +1792,6 @@ ranger
 ranking
 ransack
 rare
-rarity
 rascal
 rash
 rasping
@@ -1995,7 +1969,6 @@ safari
 saffron
 saga
 sage
-saggy
 saint
 sake
 salad
@@ -2109,7 +2082,6 @@ shimmer
 shimmy
 shine
 shingle
-shiny
 ship
 shirt
 shock
@@ -2235,7 +2207,6 @@ splice
 splurge
 spoiler
 sponge
-spongy
 sponsor
 spoof
 spooky
@@ -2343,7 +2314,6 @@ sublet
 sublime
 subpar
 subside
-subsidy
 subsoil
 subtype
 suburb
@@ -2415,7 +2385,6 @@ tarnish
 task
 tassel
 taste
-tasty
 tattoo
 taunt
 tavern
@@ -2457,7 +2426,6 @@ tinsel
 tiny
 tip
 tipoff
-tipper
 tissue
 trace
 track
@@ -2543,7 +2511,6 @@ undress
 undying
 unearth
 unease
-uneasy
 unequal
 uneven
 unfair

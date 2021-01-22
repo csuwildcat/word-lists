@@ -26,11 +26,15 @@ var partsOfSpeech = new natural.BrillPOSTagger(lexicon, ruleSet);
 let compileLocation = 'data/output';
 let blockedWords = require('./data/blocked.json');
 const wordFiles = [
-  'data/modified/subtlex.txt', // manually vet
-  'data/modified/bip-39.txt', // add to compile group
-  'data/modified/eff.txt', // add to compile group
-  'data/modified/plants.txt', // filter by length, add after for dupe only
-  'data/modified/animals.txt', // filter by length, add after for dupe only
+  'data/final/subtlex.txt', // manually vet
+  'data/final/subtlex-ings.txt', // manually vet
+  'data/final/bip-39.txt', // add to compile group
+  'data/final/eff.txt', // add to compile group
+  'data/final/fruits.txt', // filter by length, add after for dupe only
+  'data/final/plants.txt', // filter by length, add after for dupe only
+  'data/final/animals.txt', // filter by length, add after for dupe only
+  'data/final/random.txt', // filter by length, add after for dupe only
+  'data/final/verbs.txt', // filter by length, add after for dupe only
   // 'data/modified/verbs.txt',
   //'data/modified/google-books.txt',
 ];
@@ -64,7 +68,7 @@ posFilter = posFilter.join(',').split(/\s*,\s*/g).reduce((obj, pos) => { obj[pos
 const stripRepeated = /((\w+)(\w))\3$|/i;
 const suffixMap = {
   actor: ['er'],
-  past: ['ed'],
+  past: ['ed', 'en'],
   present: ['ing'],
   like: ['ity','ish','y'],
   without: ['less'],
@@ -72,6 +76,11 @@ const suffixMap = {
 }
 const getPosWords = words => partsOfSpeech.tag(words).taggedWords;
 const getTokenRegex = () => new RegExp(`\\b([a-zA-Z]{${minLength},${maxLength}})(?::|,|\\r|\\n|\\s+)`, 'gmi');
+
+async function getFiles(){
+  await fs.ensureDir(compileLocation);
+  return argv.files ? argv.files.split(/\s*,\s*/g) : wordFiles;
+}
 
 async function parseFiles(files, union){
   let words = {};
@@ -107,8 +116,7 @@ async function parseFiles(files, union){
 
 function compileWords(){
   return new Promise(async resolve => {
-    await fs.ensureDir(compileLocation);
-    let files = argv.files ? argv.files.split(/\s*,\s*/g) : wordFiles;
+    let files = await getFiles();
     let wordMap = await parseFiles(files);
     let words = getPosWords(Object.keys(wordMap));
     let filterSimilar = argv.similar === true ? maxLength - 3 : argv.similar;
@@ -120,7 +128,7 @@ function compileWords(){
     else {
       suffixes = [];
       for (let z in suffixMap) {
-        if (argv[z]) endings.push(suffixMap[z])
+        if (argv[z]) suffixes.push(suffixMap[z])
       }
       suffixes = suffixes.flat().sort((a, b) => b.length - a.length);
     }
@@ -153,13 +161,42 @@ function compileWords(){
 
 function getUnions() {
   return new Promise(async resolve => {
-    await fs.ensureDir(compileLocation);
-    let files = argv.files ? argv.files.split(/\s*,\s*/g) : wordFiles;
+    let files = await getFiles();
     let overlap = await parseFiles(files, true);
     console.log(overlap);
     resolve();
   });
 }
 
+const deleteFlagParser = /\s*\b([a-zA-Z]+)\s*[#](?:\b|\r|\n|\s+)*/gmi;
+const deletedWordParser = /\s*\b([a-zA-Z]+)\s*[#]*(?:\b|\r|\n|\s+)*/gmi;
+
+function deleteMarked() {
+  return new Promise(async resolve => {
+    let files = await getFiles();
+    let paths = Array.isArray(files) ? files : [files];
+    let deletedWords = {};
+    Promise.all(
+      paths.map(path => fs.readFile(path, 'utf8'))
+    ).then(texts => {
+      texts.forEach(text => {
+        text.replace(deleteFlagParser, (m, g1) => {
+          deletedWords[g1.toLowerCase()] = true;
+          return m;
+        })
+      });
+      Promise.all(
+        texts.map((text, i) => {
+          let modified = text.replace(deletedWordParser, (m, g1) => {
+            return deletedWords[g1.toLowerCase()] ? '' : m;
+          });
+          return fs.writeFile(paths[i], modified);
+        })
+      ).then(() => resolve());
+    })
+  });
+}
+
+gulp.task('purge', deleteMarked);
 gulp.task('overlap', getUnions);
 gulp.task('compile', compileWords);
