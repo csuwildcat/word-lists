@@ -6289,7 +6289,6 @@ banish
 banker
 barber
 barter
-bathe
 batter
 battery
 bay
@@ -6297,7 +6296,6 @@ beckon
 bed
 beer
 beg
-belie
 berry
 bias
 bladder
@@ -6311,7 +6309,6 @@ bother
 bound
 bowling
 brandy
-breathe
 breed
 bristle
 broaden
@@ -6323,7 +6320,6 @@ bury
 but
 butcher
 cache
-cadge
 cancer
 caper
 cater
@@ -6341,7 +6337,6 @@ chug
 cite
 clamor
 cling
-clothe
 clover
 coddle
 colony
@@ -6374,17 +6369,13 @@ decry
 deem
 deepen
 defer
-demur
 deride
 deserve
 despise
-dessert
 deter
 detest
-deworm
 diddle
 digger
-dinghy
 disrobe
 diverge
 diving
@@ -6720,7 +6711,6 @@ veer
 vein
 vex
 vie
-vivify
 vomit
 waiter
 wander
@@ -6745,6 +6735,5 @@ worsen
 wrack
 wrest
 writer
-wrought
 yoke
 zipper

@@ -475,7 +475,6 @@ depth
 deputy
 derive
 describe
-desert
 design
 desk
 despair

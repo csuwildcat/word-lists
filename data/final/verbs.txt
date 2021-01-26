@@ -232,7 +232,6 @@ beggar
 begin
 behave
 belch
-belie
 belief
 believe
 bell
@@ -242,7 +241,6 @@ belt
 bench
 bend
 benefit
-beret
 berry
 berth
 besiege
@@ -355,7 +353,6 @@ breach
 bread
 break
 breath
-breathe
 breed
 breeze
 brew
@@ -424,7 +421,6 @@ cabinet
 cable
 cache
 cactus
-cadge
 cafe
 cake
 calf
@@ -574,7 +570,6 @@ close
 closet
 clot
 cloth
-clothe
 cloud
 clover
 clown
@@ -820,7 +815,6 @@ deliver
 deluge
 delve
 demand
-demur
 den
 denote
 dentist
@@ -848,7 +842,6 @@ desist
 desk
 despair
 despise
-dessert
 destroy
 detach
 detail
@@ -864,7 +857,6 @@ devise
 devote
 devour
 dew
-deworm
 diagram
 dial
 diamond
@@ -884,7 +876,6 @@ dilute
 dim
 dime
 dine
-dinghy
 dinner
 dip
 diploma
@@ -1075,7 +1066,7 @@ etch
 evade
 even
 evening
-event
+event ---
 evict
 evoke
 evolve
@@ -3341,7 +3332,6 @@ violin
 vision
 visit
 visitor
-vivify
 voice
 void
 volcano

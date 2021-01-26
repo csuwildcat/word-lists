@@ -7,7 +7,6 @@ attack
 change
 close
 cover
-get
 hear
 keep
 know
@@ -28,13 +27,11 @@ admit
 adopt
 advance
 advise
-affect
 afflict
 age
 agree
 aim
 alert
-allege
 allow
 amount
 analyze
@@ -44,7 +41,6 @@ apply
 appoint
 approve
 argue
-arise
 arm
 arouse
 arrange
@@ -65,7 +61,6 @@ base
 battle
 bear
 become
-beget
 begin
 behave
 believe
