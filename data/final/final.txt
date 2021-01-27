@@ -6,7 +6,6 @@ abhor
 abide
 ability
 abject
-ablaze
 able
 abnormal
 abode
@@ -629,7 +628,6 @@ beard
 beast
 beat
 beatnik
-beau
 beautiful
 beauty
 bebop
@@ -744,7 +742,6 @@ bit
 bitcoin
 bite
 bitter
-bivouac
 biz
 bizarre
 black
