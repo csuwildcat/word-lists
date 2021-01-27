@@ -26,7 +26,6 @@ let compileLocation = 'data/output';
 let blockedWords = require('./data/blocked.json');
 const wordFiles = [
   'data/final/subtlex.txt', // manually vet
-  //'data/final/subtlex-ings.txt', // manually vet
   'data/final/bip-39.txt', // add to compile group
   //'data/final/eff.txt', // add to compile group
   'data/final/fruits.txt', // filter by length, add after for dupe only
@@ -34,12 +33,12 @@ const wordFiles = [
   'data/final/animals.txt', // filter by length, add after for dupe only
   'data/final/random.txt', // filter by length, add after for dupe only
   'data/final/verbs.txt', // filter by length, add after for dupe only
-  // 'data/modified/verbs.txt',
-  //'data/modified/google-books.txt',
 ];
 
-const minLength = argv.min || 3;
-const maxLength = argv.max || 8;
+console.log(argv.max === 'false');
+
+const minLength = argv.min === 0 ? 0 : argv.min || 3;
+const maxLength = argv.max === 'false' ? 20 : argv.max || 10;
 
 const sortMap = {
   'true': (a, b) => a.token.length - b.token.length || a.token.localeCompare(b.token),
@@ -130,9 +129,9 @@ async function parseFiles(files, union){
 }
 
 async function writeFiles(files, words, name){
-  let filename = (compileLocation + '/' + (name || argv.filename || files.map(path => {
+  let filename = (argv.filepath || (compileLocation + '/' + (name || argv.filename || files.map(path => {
     return path.split('/').pop().split('.')[0];
-  }).join('-'))) + (argv.list ? '.txt' : '.json');
+  }).join('-')))) + (argv.list ? '.txt' : '.json');
   return fs.writeFile(filename, argv.list ? Object.keys(words).join('\n') : JSON.stringify(words, null, 2));
 }
 

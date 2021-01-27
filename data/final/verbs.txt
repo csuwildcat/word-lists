@@ -2072,7 +2072,6 @@ paper
 parade
 parcel
 pardon
-pare
 parent
 park
 parody
@@ -2162,7 +2161,6 @@ ping
 pink
 pint
 pioneer
-pip
 pipe
 pit
 pitch
@@ -3076,7 +3074,6 @@ tail
 tailor
 taint
 take
-taketh
 talk
 tally
 tame
