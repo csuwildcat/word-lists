@@ -4574,7 +4574,6 @@ slap
 slash
 slat
 slate
-slave
 slaw
 sleaze
 sleek
