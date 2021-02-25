@@ -2789,7 +2789,6 @@ slant
 slap
 slash
 slate
-slave
 sleep
 sleet
 sleuth
