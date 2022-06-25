@@ -30,7 +30,7 @@
     "koa-static": "^5.0.0",
     "natural": "2.4.1",
     "wordpos": "2.0.0",
-    "node-fetch": "2.6.1",
+    "node-fetch": "2.6.7",
     "text-readability": "1.0.5"
   }
 }
